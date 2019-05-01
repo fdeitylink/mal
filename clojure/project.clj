@@ -1,8 +1,7 @@
 (defproject mal "0.0.1-SNAPSHOT"
   :description "Make-A-Lisp"
 
-  :dependencies [[org.clojure/clojure "1.10.0"]
-                 [net.n01se/clojure-jna "1.0.0"]]
+  :dependencies [[org.clojure/clojure "1.10.0"]]
 
   ;; To run a step with correct readline behavior:
   ;;   lein trampoline with-profile stepX run

@@ -1,6 +1,5 @@
-clojure_MODE ?= clj
-SOURCES_UTIL = src/mal/readline.$(clojure_MODE)
-SOURCES_BASE = $(SOURCES_UTIL) src/mal/reader.cljc src/mal/printer.cljc
+clojure_MODE = clj
+SOURCES_BASE = src/mal/reader.cljc src/mal/printer.cljc
 SOURCES_LISP = src/mal/env.cljc src/mal/core.cljc src/mal/stepA_mal.cljc
 SRCS = $(SOURCES_BASE) src/mal/env.cljc src/mal/core.cljc
 SOURCES = $(SOURCES_BASE) $(SOURCES_LISP)
@@ -24,13 +23,9 @@ mal: mal.jar
 src/mal/%.cljc: $(DEPS)
 	@true
 
-#src/mal/stepA_mal.cljc: $(DEPS)
 
 target/%.jar: src/mal/%.cljc $(SRCS)
 	lein with-profile $(word 1,$(subst _, ,$*)) uberjar
-
-node_modules:
-	npm install
 
 clean:
 	rm -rf target/ mal.jar mal

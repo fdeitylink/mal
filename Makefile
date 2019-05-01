@@ -49,8 +49,6 @@ MAL_IMPL = js
 
 # cbm or qbasic
 basic_MODE = cbm
-# clj or cljs (Clojure vs ClojureScript/lumo)
-clojure_MODE = clj
 # python, js, cpp, or neko
 haxe_MODE = neko
 # octave or matlab
@@ -158,9 +156,6 @@ endif
 basic_STEP_TO_PROG_cbm    = basic/$($(1)).bas
 basic_STEP_TO_PROG_qbasic = basic/$($(1))
 
-clojure_STEP_TO_PROG_clj  = clojure/target/$($(1)).jar
-clojure_STEP_TO_PROG_cljs = clojure/src/mal/$($(1)).cljc
-
 haxe_STEP_TO_PROG_neko   = haxe/$($(1)).n
 haxe_STEP_TO_PROG_python = haxe/$($(1)).py
 haxe_STEP_TO_PROG_cpp    = haxe/cpp/$($(1))
@@ -182,7 +177,7 @@ bash_STEP_TO_PROG =    bash/$($(1)).sh
 basic_STEP_TO_PROG =   $(basic_STEP_TO_PROG_$(basic_MODE))
 c_STEP_TO_PROG =       c/$($(1))
 chuck_STEP_TO_PROG =   chuck/$($(1)).ck
-clojure_STEP_TO_PROG = $(clojure_STEP_TO_PROG_$(clojure_MODE))
+clojure_STEP_TO_PROG = clojure/target/$($(1)).jar
 coffee_STEP_TO_PROG =  coffee/$($(1)).coffee
 common-lisp_STEP_TO_PROG =  common-lisp/$($(1))
 cpp_STEP_TO_PROG =     cpp/$($(1))
