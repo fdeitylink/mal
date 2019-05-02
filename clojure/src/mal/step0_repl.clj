@@ -20,8 +20,10 @@
 (defn -main
   [& args]
   (print "user> ")
+  (flush)
   (loop [line (read-line)]
     (when line
       (println (rep line))
       (print "user> ")
+      (flush)
       (recur (read-line)))))
