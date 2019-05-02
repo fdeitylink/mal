@@ -19,9 +19,9 @@
 
 (defn -main
   [& args]
-  (println "user> ")
+  (print "user> ")
   (loop [line (read-line)]
     (when line
       (println (rep line))
-      (println "user> ")
+      (print "user> ")
       (recur (read-line)))))
