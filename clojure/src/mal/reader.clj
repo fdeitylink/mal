@@ -40,7 +40,7 @@
     (let [tok (reader-peek rdr)]
       (cond
         (= tok end-tok) (do (reader-next rdr) lst)
-        (= tok nil) (throw (Exception. (str "Expected " end-tok ", reached end of input")))
+        (= tok nil) (throw (Exception. (str "Expected '" end-tok "', reached end of input")))
         :else (recur (conj lst (read-form rdr)))))))
 
 (defn read-atom

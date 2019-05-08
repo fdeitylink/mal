@@ -6,15 +6,21 @@
   {'+ #(+ %1 %2)
    '- #(- %1 %2)
    '* #(* %1 %2)
-   '/ #(int (/ %1 %2))})
+   '/ #(int (/ %1 %2))
+   'println println})
 
 (declare EVAL)
 
 (defn eval-ast
   [ast env]
   (cond
-    (symbol? ast) (if-let [val (get env ast)] val (throw (Exception. (str "Could not resolve symbol " ast))))
+    (symbol? ast) (if-let [val (get env ast)] val (throw (Exception. (str "Could not resolve symbol '" ast "'"))))
     (list? ast) (map #(EVAL % env) ast)
+    (vector? ast) (vec (map #(EVAL % env) ast))
+    (map? ast) (let [evmap (into {} (map (fn [[k v]] [k (EVAL v env)]) ast))]
+                 (if-let [k (some #(and (not (or (keyword? %) (string? %))) %) (keys evmap))]
+                   (throw (Exception. (str "Map key '" k "' is not a string or keyword")))
+                   evmap))
     :else ast))
 
 (defn READ
