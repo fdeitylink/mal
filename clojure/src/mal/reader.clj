@@ -67,7 +67,7 @@
       (= tok "~") (do (reader-next rdr) (list 'unquote (read-form rdr)))
       (= tok "~@") (do (reader-next rdr) (list 'splice-unquote (read-form rdr)))
 
-      (= tok "(") (list* (read-seq rdr "(" ")"))
+      (= tok "(") (apply list (read-seq rdr "(" ")"))
       (= tok ")") (throw (Exception. "Unexpected ')'"))
 
       (= tok "[") (vec (read-seq rdr "[" "]"))
