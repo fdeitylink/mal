@@ -12,7 +12,7 @@
 
 (defn PRINT
   [str]
-  (mal.printer/print-str str))
+  (mal.printer/pr-str str))
 
 (defn rep
   [str]
@@ -24,7 +24,10 @@
   (flush)
   (loop [line (read-line)]
     (when line
-      (println (rep line))
+      (try
+        (println (rep line))
+        (catch Exception e
+          (println (.getMessage e))))
       (print "user> ")
       (flush)
       (recur (read-line)))))
