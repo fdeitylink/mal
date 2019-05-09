@@ -1,9 +1,17 @@
 (ns mal.env)
 
+(declare env-set)
+
 (defn env
-  ([] (env nil))
-  ([outer]
-   (atom {:outer outer :data {}})))
+  ([] (env nil '() '()))
+  ([outer] (env outer '() '()))
+  ([binds exprs] (env nil binds exprs))
+  ([outer binds exprs]
+   (if (= (count binds) (count exprs))
+     (let [env (atom {:outer outer :data {}})]
+       (doall (map #(env-set env %1 %2) binds exprs))
+       env)
+     (throw (Exception. "Number of symbols and values to bind do not match")))))
 
 (defn env-set
   [env k v]

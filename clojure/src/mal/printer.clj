@@ -28,4 +28,6 @@
 
      (map? form) (pr-seq (flatten (seq form)) print-readable "{" "}")
 
+     (fn? form) "#<function>"
+
      :else (str form))))
