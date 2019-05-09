@@ -38,10 +38,10 @@
   (assert (= start-tok (reader-next rdr)))
   (loop [lst []]
     (let [tok (reader-peek rdr)]
-      (cond
-        (= tok end-tok) (do (reader-next rdr) lst)
-        (= tok nil) (throw (Exception. (str "Expected '" end-tok "', reached end of input")))
-        :else (recur (conj lst (read-form rdr)))))))
+      (condp = tok
+        end-tok (do (reader-next rdr) lst)
+        nil (throw (Exception. (str "Expected '" end-tok "', reached end of input")))
+        (recur (conj lst (read-form rdr)))))))
 
 (defn read-atom
   [rdr]
@@ -61,22 +61,22 @@
 (defn read-form
   [rdr]
   (let [tok (reader-peek rdr)]
-    (cond
-      (= tok "'") (do (reader-next rdr) (list 'quote (read-form rdr)))
-      (= tok "`") (do (reader-next rdr) (list 'quasiquote (read-form rdr)))
-      (= tok "~") (do (reader-next rdr) (list 'unquote (read-form rdr)))
-      (= tok "~@") (do (reader-next rdr) (list 'splice-unquote (read-form rdr)))
+    (condp = tok
+      "'" (do (reader-next rdr) (list 'quote (read-form rdr)))
+      "`" (do (reader-next rdr) (list 'quasiquote (read-form rdr)))
+      "~" (do (reader-next rdr) (list 'unquote (read-form rdr)))
+      "~@" (do (reader-next rdr) (list 'splice-unquote (read-form rdr)))
 
-      (= tok "(") (apply list (read-seq rdr "(" ")"))
-      (= tok ")") (throw (Exception. "Unexpected ')'"))
+      "(" (apply list (read-seq rdr "(" ")"))
+      ")" (throw (Exception. "Unexpected ')'"))
 
-      (= tok "[") (vec (read-seq rdr "[" "]"))
-      (= tok "]") (throw (Exception. "Unexpected ']'"))
+      "[" (vec (read-seq rdr "[" "]"))
+      "]" (throw (Exception. "Unexpected ']'"))
 
-      (= tok "{") (apply hash-map (read-seq rdr "{" "}"))
-      (= tok "}") (throw (Exception. "Unexpected '}'"))
+      "{" (apply hash-map (read-seq rdr "{" "}"))
+      "}" (throw (Exception. "Unexpected '}'"))
 
-      :else (read-atom rdr))))
+      (read-atom rdr))))
 
 (defn read-str
   [str]
