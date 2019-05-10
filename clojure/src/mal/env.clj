@@ -7,11 +7,19 @@
   ([outer] (env outer '() '()))
   ([binds exprs] (env nil binds exprs))
   ([outer binds exprs]
-   (if (= (count binds) (count exprs))
+   (if (or (= (count binds) (count exprs))
+           (and (<= (- (count binds) 2) (count exprs))
+                (= (count (drop-while #(not= % '&) binds)) 2)))
      (let [env (atom {:outer outer :data {}})]
-       (doall (map #(env-set env %1 %2) binds exprs))
-       env)
-     (throw (Exception. "Number of symbols and values to bind do not match")))))
+       (loop [b binds
+              e (apply list exprs)]
+         (cond
+           (empty? b) env
+           (= '& (first b)) (do (env-set env (second b) e) env)
+           :else (do
+                   (env-set env (first b) (first e))
+                   (recur (rest b) (rest e))))))
+     (throw (Exception. "Binding symbol and expression counts do not match or rest arg name is missing")))))
 
 (defn env-set
   [env k v]

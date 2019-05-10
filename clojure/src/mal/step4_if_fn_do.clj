@@ -3,7 +3,6 @@
   (:gen-class))
 
 (def repl-env (mal.env/env))
-(doseq [[k v] mal.core/core-ns] (mal.env/env-set repl-env k v))
 
 (declare EVAL)
 
@@ -56,6 +55,9 @@
 (defn rep
   [str]
   (PRINT (EVAL (READ str) repl-env)))
+
+(doseq [[k v] mal.core/core-ns] (mal.env/env-set repl-env k v))
+(rep "(def! not (fn* (bool) (if bool false true)))")
 
 (defn -main
   [& args]
