@@ -19,7 +19,7 @@
            :else (do
                    (env-set env (first b) (first e))
                    (recur (rest b) (rest e))))))
-     (throw (Exception. "Binding symbol and expression counts do not match or rest arg name is missing")))))
+     (throw (Exception. "Binding symbol and expression counts do not match and no rest arg specified")))))
 
 (defn env-set
   [env k v]
