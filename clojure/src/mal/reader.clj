@@ -5,6 +5,7 @@
 
 (def int-regex #"^-?\d+$")
 (def str-regex #"^\"(.*)\"$")
+(def bad-str-regex #"^\"(.*)[^\"]$")
 
 (defn reader
   [tokens]
@@ -48,6 +49,8 @@
   (let [tok (reader-next rdr)]
     (cond
       (re-seq int-regex tok) (Integer/parseInt tok)
+
+      (re-seq bad-str-regex tok) (throw (Exception. (str "Expected '\"', reached end of input")))
       (re-seq str-regex tok) (unescape (second (re-find str-regex tok)))
 
       (= \: (first tok)) (keyword (subs tok 1))
@@ -66,6 +69,11 @@
       "`" (do (reader-next rdr) (list 'quasiquote (read-form rdr)))
       "~" (do (reader-next rdr) (list 'unquote (read-form rdr)))
       "~@" (do (reader-next rdr) (list 'splice-unquote (read-form rdr)))
+
+      "^" (do (reader-next rdr) (let [map (read-form rdr)]
+                                  (list 'with-meta (read-form rdr) map)))
+
+      "@" (do (reader-next rdr) (list 'deref (read-form rdr)))
 
       "(" (apply list (read-seq rdr "(" ")"))
       ")" (throw (Exception. "Unexpected ')'"))
