@@ -28,9 +28,9 @@
 (defn unescape
   [string]
   (-> string
+      (s/replace "\\\\" "\\")
       (s/replace "\\\"" "\"")
-      (s/replace "\\n" "\n")
-      (s/replace "\\\\" "\\")))
+      (s/replace "\\n" "\n")))
 
 (declare read-form)
 

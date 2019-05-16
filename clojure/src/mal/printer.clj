@@ -5,9 +5,9 @@
 (defn escape
   [string]
   (-> string
-      (s/replace "\\" "\\\\")
       (s/replace "\n" "\\n")
-      (s/replace "\"" "\\\"")))
+      (s/replace "\"" "\\\"")
+      (s/replace "\\" "\\\\")))
 
 (declare pr-str)
 
