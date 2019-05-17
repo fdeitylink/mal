@@ -27,10 +27,19 @@
 
 (defn unescape
   [string]
-  (-> string
-      (s/replace "\\\\" "\\")
-      (s/replace "\\\"" "\"")
-      (s/replace "\\n" "\n")))
+  (loop [fst (first string)
+         remaining (rest string)
+         result ""]
+    (condp = fst
+      nil result
+      \\ (recur (second remaining)
+                (drop 2 remaining)
+                (str result (condp = (first remaining)
+                               \\ \\
+                               \" \"
+                               \n \newline
+                               (throw (Exception. "'\\' must be followed with '\\', '\"', or 'n'")))))
+      (recur (first remaining) (rest remaining) (str result fst)))))
 
 (declare read-form)
 
