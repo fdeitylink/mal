@@ -1,5 +1,4 @@
-(ns mal.reader
-  (:require [clojure.string :as s]))
+(ns mal.reader)
 
 (def tokenize-regex #"[\s,]*(~@|[\[\]{}()'`~^@]|\"(?:\\.|[^\\\"])*\"?|;.*|[^\s\[\]{}('\"`,;)]*)")
 
@@ -35,10 +34,10 @@
       \\ (recur (second remaining)
                 (drop 2 remaining)
                 (str result (condp = (first remaining)
-                               \\ \\
-                               \" \"
-                               \n \newline
-                               (throw (Exception. "'\\' must be followed with '\\', '\"', or 'n'")))))
+                              \\ \\
+                              \" \"
+                              \n \newline
+                              (throw (Exception. "'\\' must be followed with '\\', '\"', or 'n'")))))
       (recur (first remaining) (rest remaining) (str result fst)))))
 
 (declare read-form)
