@@ -69,8 +69,8 @@
 (rep "(def! load-file (fn* (f) (eval (read-string (str \"(do \" (slurp f) \")\")))))")
 (rep "(def! not (fn* (bool) (if bool false true)))")
 
-(defn -main
-  [& args]
+(defn repl
+  []
   (print "user> ")
   (flush)
   (loop [line (read-line)]
@@ -83,3 +83,11 @@
       (print "user> ")
       (flush)
       (recur (read-line)))))
+
+(defn -main
+  [& args]
+  (if (empty? args)
+    (repl)
+    (do
+      (mal.env/env-set repl-env '*ARGV* (apply list (rest args)))
+      (println (rep (str "(load-file \"" (first args) "\")"))))))
