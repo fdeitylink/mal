@@ -2,7 +2,9 @@
   (:require [mal reader printer env core])
   (:gen-class))
 
-(def repl-env (mal.env/env))
+(defn READ
+  [str]
+  (mal.reader/read-str str))
 
 (declare EVAL)
 
@@ -18,10 +20,6 @@
                    evmap))
     :else ast))
 
-(defn READ
-  [str]
-  (mal.reader/read-str str))
-
 (defn EVAL
   [ast env]
   (cond
@@ -29,7 +27,9 @@
     (empty? ast) ast
     :else (let [[fst snd thrd frth] ast]
             (condp = fst
-              'def! (mal.env/env-set env snd (EVAL thrd env))
+              'def! (if (= 3 (count ast))
+                      (mal.env/env-set env snd (EVAL thrd env))
+                      (throw (Exception. "def!-form must have symbol and value")))
               'let* (if (even? (count snd))
                       (let [let-env (mal.env/env env)]
                         (doseq [[k v] (partition 2 snd)]
@@ -57,6 +57,8 @@
   [exp]
   (mal.printer/pr-str exp))
 
+(def repl-env (mal.env/env))
+
 (defn rep
   [str]
   (PRINT (EVAL (READ str) repl-env)))
@@ -70,10 +72,11 @@
   (flush)
   (loop [line (read-line)]
     (when line
-      (try
-        (println (rep line))
-        (catch Exception e
-          (println (.getMessage e))))
+      (when-not (re-seq #"^\s*(;.*)?$" line)
+        (try
+          (println (rep line))
+          (catch Throwable e
+            (println (str (.getSimpleName (class e)) ": " (.getMessage e))))))
       (print "user> ")
       (flush)
       (recur (read-line)))))
