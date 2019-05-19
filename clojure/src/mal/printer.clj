@@ -30,4 +30,6 @@
 
      (fn? form) "#<function>"
 
+     (instance? clojure.lang.Atom form) (str "#<atom>: " (pr-str @form))
+
      :else (str form))))
