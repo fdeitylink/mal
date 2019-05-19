@@ -86,8 +86,7 @@
 
 (defn -main
   [& args]
+  (mal.env/env-set repl-env '*ARGV* (apply list (rest args)))
   (if (empty? args)
     (repl)
-    (do
-      (mal.env/env-set repl-env '*ARGV* (apply list (rest args)))
-      (println (rep (str "(load-file \"" (first args) "\")"))))))
+    (println (rep (str "(load-file \"" (first args) "\")")))))
