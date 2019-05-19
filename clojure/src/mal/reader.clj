@@ -3,8 +3,8 @@
 (def tokenize-regex #"[\s,]*(~@|[\[\]{}()'`~^@]|\"(?:\\.|[^\\\"])*\"?|;.*|[^\s\[\]{}('\"`,;)]*)")
 
 (def int-regex #"^-?\d+$")
-(def str-regex #"^\"(.*)\"$")
-(def bad-str-regex #"^\"(.*)[^\"]$")
+(def str-regex #"^\"((?:[\\].|[^\\\"])*)\"$")
+(def bad-str-regex #"^\"")
 
 (defn reader
   [tokens]
@@ -58,8 +58,8 @@
     (cond
       (re-seq int-regex tok) (Integer/parseInt tok)
 
-      (re-seq bad-str-regex tok) (throw (Exception. (str "Expected '\"', reached end of input")))
       (re-seq str-regex tok) (unescape (second (re-find str-regex tok)))
+      (re-seq bad-str-regex tok) (throw (Exception. (str "Expected '\"', reached end of input")))
 
       (= \: (first tok)) (keyword (subs tok 1))
 
