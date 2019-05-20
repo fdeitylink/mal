@@ -22,7 +22,7 @@
 
 (defn is-pair
   [x]
-  (and (or (list? x) (vector x)) (boolean (seq x))))
+  (and (or (list? x) (vector? x)) (boolean (seq x))))
 
 (defn quasiquote
   [ast]
