@@ -32,7 +32,7 @@
     (and (is-pair (first ast)) (= 'splice-unquote (ffirst ast))) (list 'concat
                                                                        (second (first ast))
                                                                        (quasiquote (apply list (doall (rest ast)))))
-    :else (list 'cons (quasiquote (first ast)) (quasiquote (rest ast)))))
+    :else (list 'cons (quasiquote (first ast)) (quasiquote (apply list (doall (rest ast)))))))
 
 (defn EVAL
   [ast env]
@@ -84,8 +84,8 @@
 (doseq [[k v] mal.core/core-ns] (mal.env/env-set repl-env k v))
 (mal.env/env-set repl-env 'eval #(EVAL % repl-env))
 
-(rep "(def! load-file (fn* (f) (eval (read-string (str \"(do \" (slurp f) \")\")))))")
 (rep "(def! not (fn* (bool) (if bool false true)))")
+(rep "(def! load-file (fn* (f) (eval (read-string (str \"(do \" (slurp f) \")\")))))")
 
 (defn repl
   []
