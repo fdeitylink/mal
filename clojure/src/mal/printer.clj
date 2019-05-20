@@ -23,7 +23,7 @@
 
      (string? form) (if print-readable (str "\"" (escape form) "\"") form)
 
-     (list? form) (pr-seq form print-readable "(" ")")
+     (seq? form) (pr-seq form print-readable "(" ")")
      (vector? form) (pr-seq form print-readable "[" "]")
 
      (map? form) (pr-seq (flatten (seq form)) print-readable "{" "}")

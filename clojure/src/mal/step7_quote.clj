@@ -12,7 +12,7 @@
   [ast env]
   (cond
     (symbol? ast) (mal.env/env-get env ast)
-    (list? ast) (apply list (doall (map #(EVAL % env) ast)))
+    (seq? ast) (doall (map #(EVAL % env) ast))
     (vector? ast) (vec (doall (map #(EVAL % env) ast)))
     (map? ast) (let [evmap (into {} (doall (map (fn [[k v]] [k (EVAL v env)]) ast)))]
                  (if-let [k (some #(and (not (or (keyword? %) (string? %))) %) (keys evmap))]
@@ -22,7 +22,7 @@
 
 (defn is-pair
   [x]
-  (and (or (list? x) (vector? x)) (boolean (seq x))))
+  (and (sequential? x) (boolean (seq x))))
 
 (defn quasiquote
   [ast]
@@ -31,13 +31,13 @@
     (= 'unquote (first ast)) (second ast)
     (and (is-pair (first ast)) (= 'splice-unquote (ffirst ast))) (list 'concat
                                                                        (second (first ast))
-                                                                       (quasiquote (apply list (doall (rest ast)))))
-    :else (list 'cons (quasiquote (first ast)) (quasiquote (apply list (doall (rest ast)))))))
+                                                                       (quasiquote (rest ast)))
+    :else (list 'cons (quasiquote (first ast)) (quasiquote (rest ast)))))
 
 (defn EVAL
   [ast env]
   (cond
-    (not (list? ast)) (eval-ast ast env)
+    (not (seq? ast)) (eval-ast ast env)
     (empty? ast) ast
     :else (let [[fst snd thrd frth] ast]
             (condp = fst
