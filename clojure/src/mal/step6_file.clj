@@ -89,4 +89,4 @@
   (mal.env/env-set repl-env '*ARGV* (apply list (rest args)))
   (if (empty? args)
     (repl)
-    (println (rep (str "(load-file \"" (first args) "\")")))))
+    (rep (str "(load-file \"" (first args) "\")"))))
