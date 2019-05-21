@@ -20,6 +20,9 @@
    'count count
    'cons cons
    'concat concat
+   'nth nth
+   'first first
+   'rest rest
 
    'pr-str #(s/join " " (map mal.printer/pr-str %&))
    'str #(apply str (map (fn [form] (mal.printer/pr-str form false)) %&))
