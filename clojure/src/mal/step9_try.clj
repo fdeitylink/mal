@@ -95,7 +95,7 @@
                                   (catch clojure.lang.ExceptionInfo e
                                     (EVAL (nth thrd 2) (mal.env/env env [(second thrd)] [(:data (ex-data e))])))
                                   (catch Throwable e
-                                    (EVAL (nth thrd 2) (mal.env/env env [(second thrd)] [(.getMessage e)]))))
+                                    (EVAL (nth thrd 2) (mal.env/env env [(second thrd)] [(or (.getMessage e) (str e))]))))
                                 (throw (Exception. "try*/catch* requires a single form and a catch*-form with exception name and form to evaluate")))
                         (let [[f & args] (eval-ast ast env)
                               {:keys [fn-ast params fn-env]} (meta f)]
@@ -131,7 +131,7 @@
         (try
           (println (rep line))
           (catch Throwable e
-            (println (str (.getSimpleName (class e)) ": " (.getMessage e))))))
+            (.printStackTrace e System/out))))
       (print "user> ")
       (flush)
       (recur (read-line)))))

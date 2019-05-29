@@ -41,6 +41,7 @@
    'concat concat
    'assoc assoc
    'dissoc dissoc
+   'contains? contains?
    'nth nth
    'get get
    'first first

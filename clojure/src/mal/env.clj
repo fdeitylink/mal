@@ -44,4 +44,4 @@
   [env k]
   (if-let [entry (env-lookup env k)]
     (val entry)
-    (throw (Exception. (str "Value for symbol '" k "' not found")))))
+    (throw (Exception. (str "'" k "' not found")))))
