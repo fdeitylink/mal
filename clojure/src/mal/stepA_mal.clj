@@ -116,11 +116,16 @@
 (doseq [[k v] mal.core/core-ns] (mal.env/env-set repl-env k v))
 (mal.env/env-set repl-env 'eval #(EVAL % repl-env))
 
-(rep "(def! *host-language* \"Clojure\")")
+(rep "(def! *host-language* \"clojure\")")
+
+(rep "(def! inc (fn* (x) (+ x 1)))")
+
+(rep "(def! gensym (let* (counter (atom 0)) (fn* () (symbol (str \"G__\" (swap! counter inc))))))")
 
 (rep "(def! not (fn* (x) (if x false true)))")
 (rep "(defmacro! cond (fn* (& xs) (if (> (count xs) 0) (list 'if (first xs) (if (> (count xs) 1) (nth xs 1) (throw \"Odd number of forms to cond\")) (cons 'cond (rest (rest xs)))))))")
-(rep "(defmacro! or (fn* (& xs) (if (empty? xs) nil (if (= 1 (count xs)) (first xs) `(let* (or_ ~(first xs)) (if or_ or_ (or ~@(rest xs))))))))`")
+(rep "(defmacro! or (fn* (& xs) (if (empty? xs) nil (if (= 1 (count xs)) (first xs) (let* (condvar (gensym)) `(let* (~condvar ~(first xs)) (if ~condvar ~condvar (or ~@(rest xs)))))))))")
+
 (rep "(def! load-file (fn* (f) (eval (read-string (str \"(do \" (slurp f) \")\")))))")
 
 (defn repl
