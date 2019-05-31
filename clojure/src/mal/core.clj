@@ -82,6 +82,6 @@
 
    'slurp slurp
 
-   'readline read-line
+   'readline #(do (println %) (read-line))
 
    'time-ms #(System/currentTimeMillis)})
