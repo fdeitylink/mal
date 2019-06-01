@@ -125,6 +125,7 @@
 (rep "(def! not (fn* (x) (if x false true)))")
 (rep "(defmacro! cond (fn* (& xs) (if (> (count xs) 0) (list 'if (first xs) (if (> (count xs) 1) (nth xs 1) (throw \"Odd number of forms to cond\")) (cons 'cond (rest (rest xs)))))))")
 (rep "(defmacro! or (fn* (& xs) (if (empty? xs) nil (if (= 1 (count xs)) (first xs) (let* (condvar (gensym)) `(let* (~condvar ~(first xs)) (if ~condvar ~condvar (or ~@(rest xs)))))))))")
+(rep "(defmacro! and (fn* (& xs) (if (empty? xs) true (if (= 1 (count xs)) (first xs) (let* (condvar (gensym)) `(let* (~condvar ~(first xs)) (if ~condvar (and ~@(rest xs)) ~condvar)))))))")
 
 (rep "(def! load-file (fn* (f) (eval (read-string (str \"(do \" (slurp f) \")\")))))")
 
