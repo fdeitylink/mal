@@ -1,0 +1,9 @@
+(def! main
+  (fn* ()
+    (let* (s (readline "Say a thing"))
+      (if s
+        (do
+          (println s)
+          (main))))))
+
+(main)

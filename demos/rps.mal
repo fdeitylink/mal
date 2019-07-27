@@ -1,0 +1,19 @@
+(def! main
+  (fn* ()
+    (let* (player-choice (readline "Pick (r)ock, (p)aper, or (s)cissors")
+           digit (mod (time-ms) 10)
+           our-choice (cond (< digit 3) "r" (< digit 6) "p" :else "s"))
+      (if (or (= player-choice "r") (= player-choice "p") (= player-choice "s"))
+        (do
+          (cond
+            (= player-choice our-choice) (println "Tie!")
+            (and (= player-choice "r") (= our-choice "p")) (println "I win!")
+            (and (= player-choice "r") (= our-choice "s")) (println "You win!")
+            (and (= player-choice "p") (= our-choice "r")) (println "You win!")
+            (and (= player-choice "p") (= our-choice "s")) (println "I win!")
+            (and (= player-choice "s") (= our-choice "r")) (println "I win!")
+            (and (= player-choice "s") (= our-choice "p")) (println "You win!"))
+          (main))))))
+
+(main)
+        
